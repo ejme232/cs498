@@ -5,4 +5,5 @@ Multi-Page Real-Time Data Analytics Platform with Dash and Python
 pip install pipenv
 pipenv install -r requirements.txt
 pipenv shell
+pipenv run python src/app.py
 pipenv run dashtools gui
