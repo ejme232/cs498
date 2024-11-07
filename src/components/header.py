@@ -13,7 +13,7 @@ def create_header(pages):
             # set up the dropdown options for the hamburger menu
             MenuDropdown(
                 children=[
-                    NavLink(label=f"{page['name']} - {page['path']}", href=page["relative_path"]) 
+                    NavLink(label=f"{page['name']}", href=page["relative_path"]) 
                     for page in pages.values()
                 ]
             
@@ -41,7 +41,8 @@ def create_header(pages):
     )
 
     # return all components of the header with the designated stylizing
-    return Group(
+    layout = Group(
             style={"padding": "10px", "borderBottom": "1px solid #ccc", "backgroundColor": "#f8f9fa"},
             children=[hamburger_menu, header_title, settings_menu],
     )
+    return layout

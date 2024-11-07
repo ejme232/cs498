@@ -1,7 +1,7 @@
 from dash_mantine_components import MantineProvider
 from dash import Dash, dcc, _dash_renderer, html, page_registry
 import dash
-from components.consistent_header import create_header
+from components.header import create_header
 
 # Set React Version
 _dash_renderer._set_react_version("18.2.0")
