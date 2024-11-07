@@ -1,21 +1,19 @@
-from dash import html
-import dash_mantine_components as dmc
-from pages.consistent_header import create_header  # Import the reusable header
+from dash import html, register_page
+from dash_mantine_components import Container, Text
 
-def about_page():
-    return html.Div(
-        id="about-page-content",  
-        children=[
-            # call in the header function from consistent_header.py
-            create_header(),
-            dmc.Container(
+register_page(__name__)
+about_page_container = Container(
                 id="about-page-container",
                 children=[
-                    dmc.Text("About Page", id="about-page-title", style={"fontSize": "22px", "fontWeight": "bold", "marginBottom": "10px", "color": "#34495e"}),
+                    Text("About Page", id="about-page-title", style={"fontSize": "22px", "fontWeight": "bold", "marginBottom": "10px", "color": "#34495e"}),
                     # create a brief overview of purpose of website
                     # create a stylized "what's next section"
                 ],
                 style={"padding": "20px"}
-            ),
+            )
+layout = html.Div(
+        id="about-page-content",  
+        children=[
+            about_page_container
         ]
     )
