@@ -18,7 +18,7 @@ app = Dash(__name__, suppress_callback_exceptions=True)
 # App layout with URL routing
 app.layout = dmc.MantineProvider(
     children=[
-        dcc.location(id="url"),
+        dcc.Location(id="url"),
         html.Div(id="page-content"),
     ],
     withCssVariables=True,
@@ -38,10 +38,8 @@ def display_page(pathname):
         return documentation_page()
     elif pathname == "/about":
         return about_page()
-    elif pathname == "/home":
-        return home_page()
     else:
-        return '404'
+        return home_page()
     
 # Run the app
 if __name__ == "__main__":
