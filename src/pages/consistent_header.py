@@ -2,12 +2,15 @@ from dash import html
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify  # Import DashIconify for icons
 
-# Define the reusable header with the hamburger menu
+# define the style of the header bar shown across all pages
 def create_header():
+    # create a hamburger menu that when clicked will show the page options to navigate to on the left side of the header
     hamburger_menu = dmc.Menu(
         id="hamburger-menu",
         children=[
-            dmc.MenuTarget(dmc.Button("☰", variant="light", size="sm")),  # Hamburger icon as a button
+            # utilize a hamburger icon for the button
+            dmc.MenuTarget(dmc.Button("☰", variant="light", size="sm")), 
+            # set up the dropdown options for the hamburger menu
             dmc.MenuDropdown(
                 children=[
                     dmc.NavLink(label="Home", href="/home"),
@@ -19,6 +22,7 @@ def create_header():
         ],
     )
 
+    ## Settings dropdown menu for the right side of the header
     settings_menu = dmc.Menu(
         id="settings-menu",
         children=[
@@ -32,10 +36,12 @@ def create_header():
         ],
     )
 
+    # Middle of header with website name
     header_title = dmc.Text(
         "Website Name", style={"fontSize": "24px", "fontWeight": "bold", "color": '#2c3e50'}
     )
 
+    #return all components of the header with the designated stylizing
     return dmc.Group(
         justify="space-between",
         style={"padding": "10px", "borderBottom": "1px solid #ccc", "backgroundColor": "#f8f9fa"},
