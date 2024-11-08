@@ -42,7 +42,7 @@ def create_header(pages):
 
     # return all components of the header with the designated stylizing
     layout = Group(
-            style={"padding": "10px", "borderBottom": "1px solid #ccc", "backgroundColor": "#f8f9fa"},
+            style={"padding": "10px", "borderBottom": "1px solid #ccc", "backgroundColor": "#f8f9fa", "display": "flex", "alignItems": "center", "justifyContent": "space-between"},
             children=[hamburger_menu, header_title, settings_menu],
     )
     return layout
