@@ -18,7 +18,7 @@ app.layout = MantineProvider(
         dash.page_container
     ],
     
-    withCSSVariables=True,
+    withCssVariables=True,
 )
     
 # Run the app
