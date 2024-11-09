@@ -1,6 +1,6 @@
 from dash import html, register_page
-from dash_mantine_components import Container, Title, Text
-import dash_mantine_components as dmc
+from dash_mantine_components import Container, Title, BarChart, ScatterChart, Text
+
 #define the home page
 register_page(__name__, path="/")
 
@@ -9,7 +9,7 @@ home_page_container = Container(
                 children=[
                     Title(f"Home Page", id="home-page-title", order=2),
                     Text("Days of Alcohol Usage by County Type"),
-                    dmc.BarChart(
+                    BarChart(
                         id="alcohol-by-county-bar",
                         # height of the chart
                         h=300,  
@@ -29,7 +29,7 @@ home_page_container = Container(
                     ),
 
                     Text("Alcohol Usage and KPI Score (measures psychological distress)"),
-                    dmc.ScatterChart(
+                    ScatterChart(
                         id="alcohol-distress-scatter",
                         # height of the chart
                         h=300,

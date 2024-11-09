@@ -6,3 +6,4 @@ plotly
 dash-tools
 dash-ag-grid
 dash-mantine-components==0.14
+dash_iconify
