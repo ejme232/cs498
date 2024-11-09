@@ -4,3 +4,4 @@ pandas
 gunicorn
 plotly
 dash-tools
+ag-grid
