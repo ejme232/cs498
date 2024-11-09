@@ -36,8 +36,12 @@ def create_header(pages):
     )
 
     # Middle of header with website name
-    header_title = Text(
-        "Website Name", style={"fontSize": "24px", "fontWeight": "bold", "color": '#2c3e50'}
+    header_title = Group(
+        children=[
+            Text("Mind the Gap", style={"fontSize": "30px", "fontWeight": "bold", "color": '#2c3e50', "lineHeight": "1.2"}),
+            Text("Bridging Data on Substance Abuse and Mental Health", style={"fontSize": "16px", "fontStyle": "italic", "color": '#7f8c8d', "lineHeight": "1.2"}),
+        ],
+        style={"display": "flex", "flexDirection": "column", "alignItems": "center"},
     )
 
     # return all components of the header with the designated stylizing
