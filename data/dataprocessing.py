@@ -13,7 +13,7 @@ class feature:
         self.values=[]
 
 def sepline(l):
-        return([i for i in l.split(sep='\t') if i !='\n'])
+    return([i for i in l.split(sep='\t') if i !='\n'])
 
 #f = open("test.tsv","r")
 tsv_file = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022_Tab.tsv"
