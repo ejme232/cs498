@@ -1,5 +1,5 @@
 from  dash_mantine_components import Menu, Button, NavLink, MenuTarget, MenuDropdown, ActionIcon,Text, Group
-from dash_iconify import DashIconify  # Import DashIconify for icons
+# from dash_iconify import DashIconify  # Import DashIconify for icons
 
 # define the style of the header bar shown across all pages
 
@@ -22,18 +22,18 @@ def create_header(pages):
     )
 
     # Settings dropdown menu for the right side of the header
-    settings_menu = Menu(
-        id="settings-menu",
-        children=[
-            MenuTarget(
-                ActionIcon(
-                    DashIconify(icon="ep:setting", width=24),
-                    variant="light",
-                    size="md",
-                )
-            ),
-        ],
-    )
+    # settings_menu = Menu(
+    #     id="settings-menu",
+    #     children=[
+    #         MenuTarget(
+    #             ActionIcon(
+    #                 DashIconify(icon="ep:setting", width=24),
+    #                 variant="light",
+    #                 size="md",
+    #             )
+    #         ),
+    #     ],
+    # )
 
     # Middle of header with website name
     header_title = Group(
