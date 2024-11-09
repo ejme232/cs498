@@ -1,10 +1,11 @@
-from dash import html, register_page, Input, Output, callback, no_update
+from dash import html, register_page, Input, Output, callback, no_update, dcc
 from dash_mantine_components import Container, Text, Button
 import dash_ag_grid as dag
 import pandas as pd
 import time
-
-register_page(__name__)
+import dash_bootstrap_components as dbc
+import io
+register_page(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 df = pd.read_csv("../NSDUH_2022_Tab.tsv")
 
@@ -13,6 +14,9 @@ df.columns = df.iloc[0]
 # remove the first row from the data as it's being used as the table header
 df = df[1:]  
 
+columnDefs = [{"field": col, "headerName": col} for col in df.columns]
+
+
 #define the default column properties for AgGrid
 defaultColDef = {
     # allows the columns to resize proportionally
@@ -20,7 +24,7 @@ defaultColDef = {
     # set the minimum width of each column
     "minWidth": 150,
     # set ability to be sorted 
-    "sortable": True,
+    "sortable": False,
     # set ability for columns to be resized
     "resizable": True,
 }
@@ -40,6 +44,7 @@ data_page_container =  Container(
         #set up AgGrid in order to display data used in a table format 
         dag.AgGrid(
             id="infinite-row-data-grid",
+            columnDefs = columnDefs,
             defaultColDef=defaultColDef,
             # set the grid to load data utilizing infinite scrolling (helps with page loading for large data sets)
             rowModelType="infinite",
@@ -72,6 +77,11 @@ data_page_container =  Container(
             id = "download-tsv-button",
             n_clicks=0
         ),
+        
+        Text("Accessible headers and quick-loading data table coming soon", style={"fontSize": "14px", "fontStyle": "italic"}),
+
+        #Download component
+        dcc.Download(id="download-tsv"),
     ],
     #add padding around the container for visibility/spacing
     style={"padding": "20px"}
@@ -98,14 +108,19 @@ def infinite_scroll(request):
 
 #create a callback to handle exporting the data into a TSV file
 @callback(
-    Output("export-data-grid", "exportDataAsTsv"),
-    Input("tsv-button", "n_clicks"),
+    Output("download-tsv", "data"),
+    Input("download-tsv-button", "n_clicks"),
+    prevent_initial_call=True
 )
 #define how the export data as a tsv will be handled
 def export_data_as_tsv(n_clicks):
-    if n_clicks:
-        return True
-    return False
+    if n_clicks > 0:
+        #Replace with your actual data to be exported
+        tsv_buffer = io.StringIO()
+        df.to_csv(tsv_buffer, sep='\t', index=False)
+        tsv_buffer.seek(0)
+        return dcc.send_data_frame(df.to_csv, "data.tsv", sep='\t', index=False)
+
 
 #define the layout of the page
 layout = html.Div(
