@@ -8,7 +8,7 @@ _dash_renderer._set_react_version("18.2.0")
 
 # Initialize the app
 app = Dash(__name__, suppress_callback_exceptions=True, use_pages=True)
-
+server = app.server
 # App layout with URL routing
 app.layout = MantineProvider(
     children=[
