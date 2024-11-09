@@ -4,4 +4,5 @@ pandas
 gunicorn
 plotly
 dash-tools
-ag-grid
+dash-ag-grid
+dash-mantine-components==0.14

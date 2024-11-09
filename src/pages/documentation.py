@@ -1,8 +1,6 @@
 from dash import html, register_page
-from dash_mantine_components import Container, AccordionControl, AccordionPanel, Group, Avatar, Text
+from dash_mantine_components import Container, Text
 import dash_mantine_components as dmc
-
-
 
 register_page(__name__)
 
@@ -83,7 +81,7 @@ documentation_page_container = Container(
                 value="mentalHealth",
                 )
             ],
-            multiple=True
+          
         ),
     ],
     style={"padding": "20px"}

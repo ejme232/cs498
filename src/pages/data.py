@@ -5,9 +5,14 @@ import pandas as pd
 import time
 import dash_bootstrap_components as dbc
 import io
+import pathlib
+
 register_page(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-df = pd.read_csv("../NSDUH_2022_Tab.tsv")
+tsv_file = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022_Tab.tsv"
+print(tsv_file)
+
+df = pd.read_csv(tsv_file)
 
 # Set the first row as the column names
 df.columns = df.iloc[0]  

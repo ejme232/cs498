@@ -1,4 +1,4 @@
-import time
+import pathlib
 import pickle
 
 #WILL NOT GO IN APP! purely for processing
@@ -16,7 +16,8 @@ def sepline(l):
         return([i for i in l.split(sep='\t') if i !='\n'])
 
 #f = open("test.tsv","r")
-f = open("NSDUH_2022_Tab.tsv","r")
+tsv_file = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022_Tab.tsv"
+f = open(tsv_file,"r")
 features=f.readline().split(sep='\t')
 features=features[:-1]
 for i in range(len(features)):
