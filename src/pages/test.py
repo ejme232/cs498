@@ -1,5 +1,5 @@
 from dash import html, register_page, Input, Output, State, callback, dcc, ctx
-from dash_mantine_components import Container
+from dash_mantine_components import Container, MultiSelect
 import dash_ag_grid as dag
 import pandas as pd
 import pathlib
@@ -15,8 +15,9 @@ default_grid_options = {
         'sortable': True,
         'filter': True,
         'resizable': True,
-        'minWidth': 100,
-        'floatingFilter': True
+        'floatingFilter': True,
+        'flex': 1, 
+        'autoSize': True
     },
     'enableRangeSelection': True,
     'animateRows': True,
@@ -28,12 +29,12 @@ about_page_container = Container(
         html.H1("TSV Data Viewer and Multi-Column Filter"),
 
         # Multi-select dropdown for columns
-        dcc.Dropdown(
+        MultiSelect(
             id='column-selector',
-            options=[{"label": col, "value": col} for col in df.columns],
+            data=[col for col in df.columns],
             value=[df.columns[0]],
-            multi=True,
-            placeholder="Select columns to display"
+            searchable=True,
+            label="Select columns to display",
         ),
         
         # AG Grid component
@@ -79,7 +80,9 @@ def update_grid(selected_columns):
             "filterParams": {
                 "buttons": ["reset", "apply"],
                 "closeOnApply": True
-            }
+            },
+            "flex": 1,
+            "autoSize": True,
         } for col in selected_columns
     ]
     row_data = filtered_df.to_dict('records')
