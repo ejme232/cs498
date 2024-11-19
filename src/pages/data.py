@@ -2,36 +2,24 @@ from dash import html, register_page, Input, Output, callback, no_update, dcc
 from dash_mantine_components import Container, Text, Button
 import dash_ag_grid as dag
 import pandas as pd
-import time
-import dash_bootstrap_components as dbc
-import io
 import pathlib
+import io
+import time
 
-register_page(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+file_path = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022.tsv"
+df = pd.read_csv(file_path, sep='\t')
 
-tsv_file = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022_Tab.tsv"
-print(tsv_file)
+register_page(__name__)
 
-df = pd.read_csv(tsv_file)
+columnDefs = [{"field": col, "headerName": col, "minWidth": 150, "flex": 1} for col in df.columns]
 
-# Set the first row as the column names
-df.columns = df.iloc[0]  
-# remove the first row from the data as it's being used as the table header
-df = df[1:]  
-
-columnDefs = [{"field": col, "headerName": col} for col in df.columns]
-
-
-#define the default column properties for AgGrid
 defaultColDef = {
-    # allows the columns to resize proportionally
-    "flex": 1,
-    # set the minimum width of each column
-    "minWidth": 150,
-    # set ability to be sorted 
-    "sortable": False,
-    # set ability for columns to be resized
     "resizable": True,
+    "sortable": True,
+    "filter": True,
+    "floatingFilter": True,
+    "flex": 1,
+    "autoSize": True,
 }
 
 #container to hold data page elements
@@ -42,7 +30,7 @@ data_page_container =  Container(
         Text("Data Page", id="data-page-title", style={
             "fontSize": "22px", 
             "fontWeight": "bold", 
-            "marginBottom": "10px", 
+            "marginBottom": "20px", 
             "color": "#34495e"
         }),
 
@@ -73,7 +61,8 @@ data_page_container =  Container(
                 "pagination": True,
                 # auto-size the page when using pagination
                 "paginationAutoPageSize": True,
-            }
+            },
+            style={"height": "700px", "marginBottom": "20px", "width": "100%"},
         ),
 
         #include a button to download as a TSV
@@ -82,11 +71,9 @@ data_page_container =  Container(
             id = "download-tsv-button",
             n_clicks=0
         ),
-        
-        Text("Accessible headers and quick-loading data table coming soon", style={"fontSize": "14px", "fontStyle": "italic"}),
-
         #Download component
         dcc.Download(id="download-tsv"),
+        
     ],
     #add padding around the container for visibility/spacing
     style={"padding": "20px"}
@@ -101,15 +88,18 @@ data_page_container =  Container(
 # define the infinite scroll feature so the table loads properly
 def infinite_scroll(request):
     # simulates a delay to represent slower data retrieval/processing
-    time.sleep(2)
+    time.sleep(1)
 
     #if no request then return no update
     if request is None:
         return no_update
     
+    start_row = request["startRow"]
+    end_row = request["endRow"]
+    
     #sets up retrieval of only the set of rows requested by the grid
-    partial = df.iloc[request["startRow"]: request["endRow"]]
-    return {"rowData": partial.to_dict("records"), "rowCount": len(df.index)}
+    partial_data = df.iloc[start_row:end_row]
+    return {"rowData": partial_data.to_dict("records"), "rowCount": len(df)}
 
 #create a callback to handle exporting the data into a TSV file
 @callback(
@@ -119,19 +109,13 @@ def infinite_scroll(request):
 )
 #define how the export data as a tsv will be handled
 def export_data_as_tsv(n_clicks):
-    if n_clicks > 0:
-        #Replace with your actual data to be exported
-        tsv_buffer = io.StringIO()
-        df.to_csv(tsv_buffer, sep='\t', index=False)
-        tsv_buffer.seek(0)
-        return dcc.send_data_frame(df.to_csv, "data.tsv", sep='\t', index=False)
+    #Replace with your actual data to be exported
+    return dcc.send_data_frame(df.to_csv, "NSDUH_2022.tsv", sep="\t", index=False)
 
 
-#define the layout of the page
+# Define the layout of the page
 layout = html.Div(
-        id="data-page-content",
-        children=[
-            #insert the container that has the Ag-Grid
-           data_page_container
-        ]
+    id="data-page-content",
+    children=[data_page_container],
+    style={"backgroundColor": "#f8f9fa", "minHeight": "100vh"},
 )
