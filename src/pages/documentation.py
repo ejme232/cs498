@@ -4,7 +4,9 @@ import dash_mantine_components as dmc
 
 register_page(__name__)
 
-data_gathering_string="Our data was gathered by the Substance Abuse and Mental Health Services Administration (SAMHSA) for the 2022 National Survey on Drug Use and Health (NSDUH).\nAdditional information about this database can be found at https://www.samhsa.gov/data/data-we-collect/nsduh/datafiles?data_collection=1124&year=2015, and information about how this data was collected can be viewed at https://www.samhsa.gov/data/sites/default/files/reports/rpt44477/2022-nsduh-mrb-dcfr.pdf."
+data_gathering_string="Our data was gathered by the Substance Abuse and Mental Health Services Administration (SAMHSA) for the 2022 National Survey on Drug Use and Health (NSDUH). Additional information about this database can be found in the codebook at https://www.samhsa.gov/data/data-we-collect/nsduh/datafiles?year=2022&data_collection=1186, and information about how this data was collected can be viewed at https://www.samhsa.gov/data/sites/default/files/reports/rpt44477/2022-nsduh-mrb-dcfr.pdf."
+data_processing_string="The dataset itself isn’t touched, and it is assumed that the user has access to the codebook to better understand the data. Due to the immense amount of data present in this dataset, we opted to use a smaller subset of it due to memory limitations, but our website should work with larger datasets, too."
+using_website_string="The goal of this website is to easily manipulate and extract mental health data. To do this, click on the dropdown box in the top-left corner and click on the “Data” page. This will take you to a table where you can add filters on each column. To find details on the locations and contents of each column, please refer to the codebook linked in the above box."
 
 documentation_page_container = Container(
     id="documentation-page-container",
@@ -65,15 +67,15 @@ documentation_page_container = Container(
                     dmc.AccordionControl(
                         dmc.Group(
                             [
-                                dmc.Text("Data Processing"),
+                                dmc.Text("Understanding the Data"),
                             ]
                         )
                     ),
                     dmc.AccordionPanel(
-                        dmc.Text("Here is where we will detail how the data was processed.", size="sm")
+                        dmc.Text(data_processing_string, size="sm")
                     ),
                 ],
-                value="dataProcessing",
+                value="understandingData",
                 ),
 
                 dmc.AccordionItem(
@@ -81,12 +83,12 @@ documentation_page_container = Container(
                     dmc.AccordionControl(
                         dmc.Group(
                             [
-                                dmc.Text("Understanding the Data/How to use this website"),
+                                dmc.Text("How to use this website"),
                             ]
                         )
                     ),
                     dmc.AccordionPanel(
-                        dmc.Text("Here is where we will detail important things to understand the data/how to use this website. This will help those who maybe aren't directly in the mental health field. ", size="sm")
+                        dmc.Text(using_website_string, size="sm")
                     ),
                 ],
                 value="usingWebsite",
@@ -97,12 +99,16 @@ documentation_page_container = Container(
                     dmc.AccordionControl(
                         dmc.Group(
                             [
-                                dmc.Text("Mental Health Resources"),
+                                dmc.Text("Additional Resources"),
                             ]
                         )
                     ),
                     dmc.AccordionPanel(
-                        dmc.Text("Here is where we will include some important mental health resources", size="sm")
+                        dmc.Anchor(
+                            "https://www.samhsa.gov/data/faq-nsduh", 
+                            href="https://www.samhsa.gov/data/faq-nsduh",
+                            style={"fontSize": "18px", "marginBottom": "10px"}
+                        ),
                     ),
                 ],
                 value="mentalHealth",
