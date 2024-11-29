@@ -65,14 +65,14 @@ data_page_container =  Container(
             style={"height": "700px", "marginBottom": "20px", "width": "100%"},
         ),
 
-        #include a button to download as a TSV
+        # Button to trigger download
         Button(
-            "Download TSV",
-            id = "download-tsv-button",
-            n_clicks=0
+            "Download CSV",
+            id="csv-download-button",
+            n_clicks=0,
         ),
-        #Download component
-        dcc.Download(id="download-tsv"),
+
+        dcc.Download(id="csv-download"),
         
     ],
     #add padding around the container for visibility/spacing
@@ -101,16 +101,14 @@ def infinite_scroll(request):
     partial_data = df.iloc[start_row:end_row]
     return {"rowData": partial_data.to_dict("records"), "rowCount": len(df)}
 
-#create a callback to handle exporting the data into a TSV file
 @callback(
-    Output("download-tsv", "data"),
-    Input("download-tsv-button", "n_clicks"),
+    Output("csv-download", "data"),
+    Input("csv-download-button", "n_clicks"),
     prevent_initial_call=True
 )
-#define how the export data as a tsv will be handled
-def export_data_as_tsv(n_clicks):
-    #Replace with your actual data to be exported
-    return dcc.send_data_frame(df.to_csv, "NSDUH_2022.tsv", sep="\t", index=False)
+def download_full_csv(n_clicks):
+    if n_clicks > 0:
+        return dcc.send_data_frame(df.to_csv, "NSDUH_2022.csv", index=False)
 
 
 # Define the layout of the page
