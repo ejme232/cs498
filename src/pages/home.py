@@ -1,6 +1,10 @@
-from dash import html, register_page, dcc
+from dash import html, register_page, dcc, Input, Output, State, callback, callback_context
+import pandas as pd
+import pathlib
 from dash_mantine_components import Container, Group, Title, BarChart, ScatterChart, Text, Popover, MultiSelect, Button,PopoverTarget, PopoverDropdown
 
+file_path = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022.tsv"
+df = pd.read_csv(file_path, sep='\t')
 
 #define the home page
 register_page(__name__, path="/")
@@ -48,13 +52,16 @@ chart_one_container = Container(
                                 PopoverTarget(Button("Toggle Filter")),
                                 PopoverDropdown(
                                     [
-                                        MultiSelect(
-                                            id="bar-chart-filter",
-                                            data=["1", "2", "3"],  # Replace with dynamic data
-                                            label="County Type",
-                                            placeholder="Select county types",
+                                        dcc.Checklist(
+                                            options=[{'label': 'Select All', 'value': 'all'}],
+                                            value=['all'],
+                                            id='county-type-select-all'
                                         ),
-                                        Button("Filter Bar Chart", id="bar-chart-filter-button"),
+                                        dcc.Checklist(
+                                            options=[{'label': i, 'value': i} for i in df['COUTYP4'].unique()],
+                                            value=df['COUTYP4'].unique().tolist(),
+                                            id='county-type-filter'
+                                        )
                                     ]
                                 ),
                             ],
@@ -117,3 +124,21 @@ layout = html.Div(
         home_page_container
     ],
 )
+
+@callback(
+    Output('county-type-filter', 'value'),
+    Output('county-type-select-all', 'value'),
+    Input('county-type-filter', 'value'),
+    Input('county-type-select-all', 'value'),
+    State('county-type-filter', 'options'),
+    prevent_initial_call=True,
+)
+def sync_center_checklist(county_type_selected, all_selected, all_county_type):
+    all_county_type = [item['value'] for item in all_county_type]
+    ctx = callback_context
+    input_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    if input_id == 'county-type-filter':
+        all_selected = ['all'] if set(county_type_selected) == set(all_county_type) else []
+    else:
+        county_type_selected = all_county_type if all_selected else []
+    return county_type_selected, all_selected
