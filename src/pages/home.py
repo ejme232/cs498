@@ -25,15 +25,12 @@ chart_one_container = Container(
                             # field from the data dictionary for the x-axis
                             dataKey="county-type",  
                             # data field is empty as placeholder for actual data
-                            data=[],
+                            data=[],  # Data will be dynamically updated via callback
                             #label the x and y axis
                             xAxisLabel="County Type",
-                            yAxisLabel="# of days of alcohol usage",
-                            #give name and color to the three criteria
+                            yAxisLabel="Average # of Days of Alcohol Usage",
                             series=[
-                                {"name": "Large Metro", "color": "violet.6"},
-                                {"name": "Small Metro", "color": "blue.6"},
-                                {"name": "Nonmetro", "color": "teal.6"},
+                                {"name": "Average # of Days of Alcohol Usage", "color": "blue.6"}
                             ],
                         ),
                     ],
@@ -142,3 +139,26 @@ def sync_center_checklist(county_type_selected, all_selected, all_county_type):
     else:
         county_type_selected = all_county_type if all_selected else []
     return county_type_selected, all_selected
+
+@callback(
+    Output('alcohol-by-county-bar', 'data'),
+    Input('county-type-filter', 'value')
+)
+def update_bar_chart_data(selected_county_types):
+    # Filter the DataFrame based on selected county types
+    filtered_df = df[df['COUTYP4'].isin(selected_county_types)]
+    
+    # Group by 'COUTYP4' (county type) and calculate the average of 'ALCYRTOT'
+    grouped_data = (
+        filtered_df.groupby('COUTYP4')['ALCYRTOT']
+        .apply(lambda x: x.astype(int).mean())  # Ensure numeric and calculate average
+        .reset_index()
+    )
+    
+    # Rename columns for better clarity
+    grouped_data.columns = ['county-type', 'Average # of Days of Alcohol Usage']
+    
+    # Convert DataFrame to the list of dictionaries format required for the Bar Chart
+    bar_data = grouped_data.to_dict('records')
+    
+    return bar_data
