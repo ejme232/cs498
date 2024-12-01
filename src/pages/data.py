@@ -1,5 +1,5 @@
 from dash import html, register_page, Input, Output, callback, no_update, dcc
-from dash_mantine_components import Container, Text, Button
+import dash_mantine_components as dmc
 import dash_ag_grid as dag
 import pandas as pd
 import pathlib
@@ -23,17 +23,12 @@ defaultColDef = {
 }
 
 #container to hold data page elements
-data_page_container =  Container(
+data_page_container =  dmc.Container(
     id="data-page-container",
     children=[
         #title for data page
-        Text("Data Page", id="data-page-title", style={
-            "fontSize": "22px", 
-            "fontWeight": "bold", 
-            "marginBottom": "20px", 
-            "color": "#34495e"
-        }),
-
+        dmc.Text("Data", style={"fontSize": "32px", "fontWeight": "bold", "marginBottom": "10px", "color": "#2c3e50", "textAlign": "left"}),
+        dmc.Divider(style={"marginBottom": "20px"}),
         #set up AgGrid in order to display data used in a table format 
         dag.AgGrid(
             id="infinite-row-data-grid",
@@ -66,7 +61,7 @@ data_page_container =  Container(
         ),
 
         # Button to trigger download
-        Button(
+        dmc.Button(
             "Download CSV",
             id="csv-download-button",
             n_clicks=0,
