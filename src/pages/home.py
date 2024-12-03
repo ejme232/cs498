@@ -37,7 +37,6 @@ chart_one_container = dmc.Container(
                                  }
                             ],
 
-                            highlightHover=False,
                             tooltipProps={ 
                                     "wrapperStyle": {
                                         "backgroundColor": "rgba(255, 255, 255, 0.9)",
