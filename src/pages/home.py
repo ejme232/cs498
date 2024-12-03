@@ -45,8 +45,7 @@ chart_one_container = dmc.Container(
                                         "padding": "10px",
                                         "boxShadow": "0 2px 8px rgba(0, 0, 0, 0.3)",
                                         "color": "#333"},
-                            },
-                            
+                            },   
                         ),
                     ],
                     style={"flex": "4", "paddingRight": "20px"},
@@ -147,7 +146,7 @@ chart_two_container = dmc.Container(
                                             min=0,
                                             max=365,
                                             step=1,
-                                            value=365,
+                                            value=31,
                                             marks={i: str(i) for i in range(0, 365, 30)},
                                             tooltip={"placement": "bottom"}
                                         )
