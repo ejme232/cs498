@@ -1,10 +1,12 @@
 from dash import html, register_page, Input, Output, callback, no_update, dcc
+from dash_iconify import DashIconify
 import dash_mantine_components as dmc
 import dash_ag_grid as dag
 import pandas as pd
 import pathlib
 import io
 import time
+
 
 file_path = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022.tsv"
 df = pd.read_csv(file_path, sep='\t')
@@ -59,19 +61,49 @@ data_page_container =  dmc.Container(
             },
             style={"height": "700px", "marginBottom": "20px", "width": "100%"},
         ),
-
-        # Button to trigger download
-        dmc.Button(
-            "Download CSV",
-            id="csv-download-button",
-            n_clicks=0,
-        ),
-
-        dcc.Download(id="csv-download"),
-        
+        dmc.Group(
+            children=[
+                #Button to trigger download
+                dmc.Container(
+                    dmc.Button(
+                        "Download CSV",
+                        id="csv-download-button",
+                        n_clicks=0,
+                    ),
+                ),
+                dmc.Container(
+                    dmc.HoverCard(
+                        id="nav-to-codebook",
+                        shadow="md",
+                        width = 500,
+                        withArrow = True,
+                        children=[
+                            dmc.HoverCardTarget(
+                                dmc.Button("To learn more about the data", color="blue", size="sm"),
+                            ),
+                            dmc.HoverCardDropdown(
+                                [
+                                    dmc.Text("To access the data codebook, and learn more about the column headings, click the button below."),
+                                    dmc.NavLink(
+                                        id="navlink-codebook",
+                                        label="Click here",
+                                        active = True, 
+                                        variant = "filled",
+                                        target="_blank",
+                                        href="https://www.samhsa.gov/data/system/files/media-puf-file/NSDUH-2022-DS0001-info-codebook.pdf",
+                                        
+                                    ),
+                                   
+                                ]
+                            ),
+                        ]
+                    )
+                )
+            ]
+        )
     ],
     #add padding around the container for visibility/spacing
-    style={"padding": "20px"}
+    style={"padding": "20px"},
 )
 
 # create a callback that handles the infinite scrolling feature of AgGrid
