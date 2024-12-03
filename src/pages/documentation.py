@@ -89,7 +89,7 @@ documentation_page_container = dmc.Container(
             ],
           style={"marginBottom": "20px"},
         ),
-
+    
          dmc.Paper(
             children=[
                 dmc.Text("Data Citation", td="underline", fw=700, style={"fontSize":"18px", "marginTop": "10px"}),
