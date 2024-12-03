@@ -8,7 +8,7 @@ def create_header(pages):
         id="hamburger-menu",
         children=[
             # utilize a hamburger icon for the button
-            dmc.MenuTarget(dmc.Button("☰", variant="light", size="md")), 
+            dmc.MenuTarget(dmc.Button("☰", color="#2c3e50", variant="light", size="md")), 
             # set up the dropdown options for the hamburger menu
             dmc.MenuDropdown(
                 children=[
@@ -33,16 +33,18 @@ def create_header(pages):
     what_to_do = dmc.HoverCard(
         id="nav-to-documentation",
         shadow="md",
+        width = 500,
+        withArrow = True,
         children=[
             dmc.HoverCardTarget(
-                DashIconify(icon="mingcute:question-line", width=30, color="Blue"),
+                DashIconify(icon="mingcute:question-line", width=30, color="#2c3e50"),
             ),
             dmc.HoverCardDropdown(
                 [
-                    dmc.Text("Click the button below to go to our documentation page to learn more."),
+                    dmc.Text("Not sure what to do? Click the button below to go to the documentation page to learn more."),
                     dmc.NavLink(
                         id="navlink-documentation",
-                        label="With icon",
+                        label="Click here",
                         active = True, 
                         variant = "filled",
                         href="/documentation",
