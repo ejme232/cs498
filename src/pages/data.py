@@ -61,46 +61,40 @@ data_page_container =  dmc.Container(
             },
             style={"height": "700px", "marginBottom": "20px", "width": "100%"},
         ),
-        dmc.Group(
+
+        dmc.Button(
+            "Download CSV",
+            id="csv-download-button",
+            n_clicks=0,
+            style={"marginBottom": "20px"},
+            ),
+            dcc.Download(id="csv-download"),
+        
+        dmc.HoverCard(
+            id="nav-to-codebook",
+            shadow="md",
+            width = 500,
+            withArrow = True,
             children=[
-                #Button to trigger download
-                dmc.Container(
-                    dmc.Button(
-                        "Download CSV",
-                        id="csv-download-button",
-                        n_clicks=0,
-                    ),
+                dmc.HoverCardTarget(
+                    dmc.Button("To learn more about the data", color="blue", size="sm"),
                 ),
-                dmc.Container(
-                    dmc.HoverCard(
-                        id="nav-to-codebook",
-                        shadow="md",
-                        width = 500,
-                        withArrow = True,
-                        children=[
-                            dmc.HoverCardTarget(
-                                dmc.Button("To learn more about the data", color="blue", size="sm"),
-                            ),
-                            dmc.HoverCardDropdown(
-                                [
-                                    dmc.Text("To access the data codebook, and learn more about the column headings, click the button below."),
-                                    dmc.NavLink(
-                                        id="navlink-codebook",
-                                        label="Click here",
-                                        active = True, 
-                                        variant = "filled",
-                                        target="_blank",
-                                        href="https://www.samhsa.gov/data/system/files/media-puf-file/NSDUH-2022-DS0001-info-codebook.pdf",
-                                        
-                                    ),
+                dmc.HoverCardDropdown(
+                    [
+                        dmc.Text("To access the data codebook, and learn more about the column headings, click the button below."),
+                        dmc.NavLink(
+                            id="navlink-codebook",
+                            label="Click here",
+                            active = True, 
+                            variant = "filled",
+                            target="_blank",
+                            href="https://www.samhsa.gov/data/system/files/media-puf-file/NSDUH-2022-DS0001-info-codebook.pdf",        
+                        ),
                                    
-                                ]
-                            ),
-                        ]
-                    )
-                )
+                    ]
+                ),
             ]
-        )
+        ),
     ],
     #add padding around the container for visibility/spacing
     style={"padding": "20px"},
