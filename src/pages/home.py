@@ -1,7 +1,8 @@
-from dash import html, register_page, dcc, Input, Output, State, callback, callback_context
+from dash import html, dcc, register_page, Input, Output, State, callback, callback_context
 import pandas as pd
 import pathlib
-from dash_mantine_components import Container, Group, Title, BarChart, ScatterChart, Text, Popover, MultiSelect, Button,PopoverTarget, PopoverDropdown
+import dash_mantine_components as dmc
+import plotly.graph_objects as go
 
 file_path = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022.tsv"
 df = pd.read_csv(file_path, sep='\t')
@@ -9,19 +10,19 @@ df = pd.read_csv(file_path, sep='\t')
 #define the home page
 register_page(__name__, path="/")
 
-chart_one_container = Container(
+chart_one_container = dmc.Container(
     id="chart-one-container",
     children=[           
-        Title("Days of Alcohol Usage by County Type", order=4, style={"marginBottom": "10px"}),
-        Group(
+        dmc.Title("Days of Alcohol Usage by County Type", order=4, style={"marginBottom": "10px"}),
+        dmc.Group(
             children=[
-                Container(
+                dmc.Container(
                     id="bar-chart-container",
                     children=[
-                        BarChart(
+                        dmc.BarChart(
                             id="alcohol-by-county-bar",
                             # height of the chart
-                            h=300,  
+                            h=600,  
                             # field from the data dictionary for the x-axis
                             dataKey="county-type",  
                             # data field is empty as placeholder for actual data
@@ -30,24 +31,36 @@ chart_one_container = Container(
                             xAxisLabel="County Type",
                             yAxisLabel="Average # of Days of Alcohol Usage",
                             series=[
-                                {"name": "Average # of Days of Alcohol Usage", "color": "blue.6"}
+                                {
+                                    "name": "Average # of Days of Alcohol Usage", 
+                                    "color": "blue.6",
+                                 }
                             ],
+
+                            tooltipProps={ 
+                                    "wrapperStyle": {
+                                        "backgroundColor": "rgba(255, 255, 255, 0.9)",
+                                        "borderRadius": "8px",
+                                        "padding": "10px",
+                                        "boxShadow": "0 2px 8px rgba(0, 0, 0, 0.3)",
+                                        "color": "#333"},
+                            },   
                         ),
                     ],
-                    style={"flex": "3", "paddingRight": "20px"},
+                    style={"flex": "4", "paddingRight": "20px"},
                 ),
-                Container(
+                dmc.Container(
                     id="bar-chart-filter-sidebar",
                     children=[
-                        Title("Filters", order=5, style={"fontSize": "14px", "marginBottom": "10px"}),
-                        Popover(
+                        dmc.Title("Filters", order=5, style={"fontSize": "14px", "marginBottom": "10px"}),
+                        dmc.Popover(
                             id="bar-chart-popover",
                             position="bottom",
                             withArrow=True,
                             trapFocus=True,
                             children=[
-                                PopoverTarget(Button("Toggle Filter")),
-                                PopoverDropdown(
+                                dmc.PopoverTarget(dmc.Button("Toggle Filter")),
+                                dmc.PopoverDropdown(
                                     [
                                         dcc.Checklist(
                                             options=[{'label': 'Select All', 'value': 'all'}],
@@ -66,7 +79,7 @@ chart_one_container = Container(
                     ],
                     style={
                         "padding": "10px",
-                        "width": "250px",
+                        "flex": "1",
                         "borderLeft": "1px solid #ddd",
                         "marginLeft": "20px",
                         "boxSizing": "border-box",
@@ -76,40 +89,96 @@ chart_one_container = Container(
             style={"display": "flex", "flexDirection": "row", "alignItems": "flex-start", "width": "100%"},
         ),
     ],
-    style={"marginBottom": "30px", "padding": "20px", "borderBottom": "1px solid #ddd", "borderRadius": "5px", "maxWidth": "800px", "margin": "auto"},
+    style={"marginBottom": "30px", "padding": "20px", "borderBottom": "1px solid #ddd", "borderRadius": "5px", "maxWidth": "1200px", "margin": "auto"},
 )
-        
-chart_two_container = Container(
+
+def create_heatmap(df):
+    heatmap_figure = go.Figure(data=go.Histogram2d(
+        x=df['ALCYRTOT'],
+        y=df['KSSLR6MONED'],
+        colorscale='Blues',
+    ))
+    heatmap_figure.update_layout(
+        title="Alcohol Usage and KPI Score",
+        xaxis_title="Days of Alcohol Usage",
+        yaxis_title="KPI Score (Past Month)",
+        height=500,
+        margin={"l": 50, "r": 50, "t": 50, "b": 50},
+    )
+    return heatmap_figure
+
+heatmap_figure = create_heatmap(df)
+
+chart_two_container = dmc.Container(
     id="chart-two-container",
     children=[
-        Title("Alcohol Usage and KPI Score (measures psychological distress)", order=4, style={"marginBottom": "10px"}),
-        Group(
+        dmc.Title("Alcohol Usage and KPI Score (measures psychological distress)", order=4, style={"marginBottom": "10px"}),
+        dmc.Group(
             children=[
-                ScatterChart(
-                    id="alcohol-distress-scatter",
-                    # height of the chart
-                    h=300,
-                    #field for x and y axis
-                    dataKey={"x": "alcohol", "y":"KPI"},
-                    #data field is empty for now as placeholder for actual data
-                    data=[],
-                    #label the x and y axis
-                    xAxisLabel="# of days of alcohol usage",
-                    yAxisLabel="KPI Score",
-                ), 
-            ]
+                dmc.Container(
+                    id="heatmap-container",
+                    children=[
+                        dcc.Graph(
+                            id="alcohol-distress-heatmap",
+                            figure=heatmap_figure,
+                           config={"displayModeBar": False},
+                           style={"height": "300px"}
+                        ), 
+                    ],
+                    style={"flex": "4", "paddingRight": "20px"},
+                ),
+                dmc.Container(
+                    id="heatmap-filter-sidebar",
+                    children=[
+                        dmc.Title("Filters", order=5, style={"fontSize": "14px", "marginBottom": "10px"}),
+                        dmc.Popover(
+                            id="heatmap-popover",
+                            position="bottom",
+                            withArrow=True,
+                            trapFocus=True,
+                            children=[
+                                dmc.PopoverTarget(dmc.Button("Toggle Filter")),
+                                dmc.PopoverDropdown(
+                                    [
+                                        dcc.Slider(
+                                            id='alcohol-slider',
+                                            min=0,
+                                            max=365,
+                                            step=1,
+                                            value=31,
+                                            marks={i: str(i) for i in range(0, 365, 30)},
+                                            tooltip={"placement": "bottom"}
+                                        )
+                                    ],
+                                    style={"width": "400px"}
+                                ),
+                            ],
+                        ),     
+                    ],
+                    style={
+                        "padding": "10px",
+                        "flex": "1",
+                        "borderLeft": "1px solid #ddd",
+                        "marginLeft": "20px",
+                        "boxSizing": "border-box",
+                    },
+                ),
+                
+            ],
+            style={"display": "flex", "flexDirection": "row", "alignItems": "flex-start", "width": "100%"},
+
         )
     ],
-    style={"padding": "20px", "margin": "auto", "maxWidth": "800px"}
+    style={"marginBottom": "30px", "padding": "20px", "borderBottom": "1px solid #ddd", "borderRadius": "5px", "maxWidth": "1200px", "margin": "auto"},
 )
                     
-home_page_container = Container(
+home_page_container = dmc.Container(
     id="home-page-container",
     children=[
-        Title(f"Home Page", id="home-page-title", order=2, style={"marginBottom": "20px"}),
+        dmc.Text("Home", style={"fontSize": "32px", "fontWeight": "bold", "marginBottom": "10px", "color": "#2c3e50", "textAlign": "left"}),
+        dmc.Divider(style={"marginBottom": "20px"}),        
         chart_one_container,
         chart_two_container,
-        Text("More charts and data to be added", style={"fontSize": "14px", "fontStyle": "italic"}),
     ],
     style={"padding": "20px", "margin": "auto", "maxWidth": "900px", "textAlign": "left"},
 )
@@ -144,6 +213,7 @@ def sync_center_checklist(county_type_selected, all_selected, all_county_type):
     Output('alcohol-by-county-bar', 'data'),
     Input('county-type-filter', 'value')
 )
+
 def update_bar_chart_data(selected_county_types):
     # Filter the DataFrame based on selected county types
     filtered_df = df[df['COUTYP4'].isin(selected_county_types)]
@@ -162,3 +232,11 @@ def update_bar_chart_data(selected_county_types):
     bar_data = grouped_data.to_dict('records')
     
     return bar_data
+@callback(
+    Output('alcohol-distress-heatmap', 'figure'),
+    Input('alcohol-slider', 'value')
+)
+
+def update_heatmap(selected_value):
+    filtered_df = df[df['ALCYRTOT'] <= selected_value]
+    return create_heatmap(filtered_df)

@@ -1,10 +1,12 @@
 from dash import html, register_page, Input, Output, callback, no_update, dcc
-from dash_mantine_components import Container, Text, Button
+from dash_iconify import DashIconify
+import dash_mantine_components as dmc
 import dash_ag_grid as dag
 import pandas as pd
 import pathlib
 import io
 import time
+
 
 file_path = str(pathlib.Path(__file__).parents[2]) + "/NSDUH_2022.tsv"
 df = pd.read_csv(file_path, sep='\t')
@@ -23,17 +25,12 @@ defaultColDef = {
 }
 
 #container to hold data page elements
-data_page_container =  Container(
+data_page_container =  dmc.Container(
     id="data-page-container",
     children=[
         #title for data page
-        Text("Data Page", id="data-page-title", style={
-            "fontSize": "22px", 
-            "fontWeight": "bold", 
-            "marginBottom": "20px", 
-            "color": "#34495e"
-        }),
-
+        dmc.Text("Data", style={"fontSize": "32px", "fontWeight": "bold", "marginBottom": "10px", "color": "#2c3e50", "textAlign": "left"}),
+        dmc.Divider(style={"marginBottom": "20px"}),
         #set up AgGrid in order to display data used in a table format 
         dag.AgGrid(
             id="infinite-row-data-grid",
@@ -65,18 +62,42 @@ data_page_container =  Container(
             style={"height": "700px", "marginBottom": "20px", "width": "100%"},
         ),
 
-        # Button to trigger download
-        Button(
+        dmc.Button(
             "Download CSV",
             id="csv-download-button",
             n_clicks=0,
-        ),
-
-        dcc.Download(id="csv-download"),
+            style={"marginBottom": "20px"},
+            ),
+            dcc.Download(id="csv-download"),
         
+        dmc.HoverCard(
+            id="nav-to-codebook",
+            shadow="md",
+            width = 500,
+            withArrow = True,
+            children=[
+                dmc.HoverCardTarget(
+                    dmc.Button("To learn more about the data", color="blue", size="sm"),
+                ),
+                dmc.HoverCardDropdown(
+                    [
+                        dmc.Text("To access the data codebook, and learn more about the column headings, click the button below."),
+                        dmc.NavLink(
+                            id="navlink-codebook",
+                            label="Click here",
+                            active = True, 
+                            variant = "filled",
+                            target="_blank",
+                            href="https://www.samhsa.gov/data/system/files/media-puf-file/NSDUH-2022-DS0001-info-codebook.pdf",        
+                        ),
+                                   
+                    ]
+                ),
+            ]
+        ),
     ],
     #add padding around the container for visibility/spacing
-    style={"padding": "20px"}
+    style={"padding": "20px"},
 )
 
 # create a callback that handles the infinite scrolling feature of AgGrid
