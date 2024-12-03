@@ -96,27 +96,27 @@ documentation_page_container = dmc.Container(
                 dmc.Text(
                     "Author: Substance Abuse and Mental Health Services Administration (SAMHSA) Center for Behavioral Health Statistics and Quality", 
                     id="documentation-citation",
-                    style={"fontSize": "18px", "marginBottom": "10px"}
+                    style={"fontSize": "12px", "marginBottom": "10px"}
                 ),
                 dmc.Text(
                     "Date of publication: October 25, 2023", 
                     id="documentation-citation",
-                    style={"fontSize": "18px", "marginBottom": "10px"}
+                    style={"fontSize": "12px", "marginBottom": "10px"}
                 ),
                 dmc.Text(
                     "Title: 2022 National Survey on Drug Use and Health (NSDUH)", 
                     id="documentation-citation",
-                    style={"fontSize": "18px", "marginBottom": "10px"}
+                    style={"fontSize": "12px", "marginBottom": "10px"}
                 ),
                 dmc.Text(
                     "Publisher: SAMHSA", 
                     id="documentation-citation",
-                    style={"fontSize": "18px", "marginBottom": "10px"}
+                    style={"fontSize": "12px", "marginBottom": "10px"}
                 ),
                 dmc.Anchor(
                     "URL: https://www.samhsa.gov/data/data-we-collect/nsduh/datafiles?year=2022&data_collection=1186", 
                     href="https://www.samhsa.gov/data/data-we-collect/nsduh/datafiles?year=2022&data_collection=1186",
-                    style={"fontSize": "18px", "marginBottom": "10px"}
+                    style={"fontSize": "12px", "marginBottom": "10px"}
                 ),
             ],
             withBorder=True,
